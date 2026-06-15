@@ -1,0 +1,35 @@
+<div class="profile-container">
+  <div class="profile-card">
+
+    <div class="profile-header">
+      <div class="profile-avatar">
+        {{ authService.me().firstName.charAt(0) }}{{ authService.me().lastName.charAt(0) }}
+      </div>
+      <h1>Mon Profil</h1>
+    </div>
+
+    <div class="profile-content">
+      <div class="info-group">
+        <span class="label">Prénom</span>
+        <span class="value">{{ authService.me().firstName }}</span>
+      </div>
+
+      <div class="info-group">
+        <span class="label">Nom</span>
+        <span class="value">{{ authService.me().lastName }}</span>
+      </div>
+
+      <div class="info-group">
+        <span class="label">Email</span>
+        <span class="value">{{ authService.me().email }}</span>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button mat-flat-button color="warn" (click)="onLogout()">
+        Se déconnecter
+      </button>
+    </div>
+
+  </div>
+</div>

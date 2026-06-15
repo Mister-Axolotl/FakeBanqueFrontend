@@ -1,3 +1,53 @@
-<button mat-flat-button (click)="onLogin()">
-  Se connecter
-</button>
+<div class="login-container">
+  <div class="login-card">
+
+    <div class="login-header">
+      <h1>Connexion</h1>
+    </div>
+
+    <div class="login-content">
+      <mat-form-field appearance="outline">
+        <mat-label>Adresse email</mat-label>
+        <input matInput placeholder="john.doe@example.com" [formControl]="email"
+          (blur)="updateErrorMessage(email, 'adresse email')" required />
+        @if (email.invalid) {
+        <mat-error>{{getEmailErrorMessage()}}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Prénom</mat-label>
+        <input matInput placeholder="John" [formControl]="firstName" (blur)="updateErrorMessage(firstName, 'prénom')"
+          required />
+        @if (firstName.invalid) {
+        <mat-error>{{getFirstNameErrorMessage()}}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input matInput placeholder="Doe" [formControl]="lastName" (blur)="updateErrorMessage(lastName, 'nom')"
+          required />
+        @if (lastName.invalid) {
+        <mat-error>{{getLastNameErrorMessage()}}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput type="password" placeholder="Mot de passe" [formControl]="password"
+          (blur)="updateErrorMessage(password, 'mot de passe')" required />
+        @if (password.invalid) {
+        <mat-error>{{getPasswordErrorMessage()}}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="login-actions">
+      <button mat-flat-button color="warn" (click)="onLogin()">
+        Se connecter
+      </button>
+    </div>
+
+  </div>
+</div>

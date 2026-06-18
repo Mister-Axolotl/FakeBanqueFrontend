@@ -1,0 +1,122 @@
+@if (account(); as account) {
+<section class="account-page">
+  <header class="page-header">
+    <div>
+      <a mat-button routerLink="/accounts" class="back-link">
+        <mat-icon iconPositionStart>arrow_back</mat-icon>
+        Retour aux comptes
+      </a>
+
+    </div>
+
+    <div class="balance-pill" [class.savings]="tone() === 'savings'" [class.checking]="tone() === 'checking'">
+      <span class="label">Solde actuel</span>
+      <span class="value">{{ account.balance }} €</span>
+    </div>
+  </header>
+
+  <div class="detail-grid">
+    <mat-card class="detail-card summary-card">
+      <mat-card-header>
+        <div class="account-icon" [class.savings]="tone() === 'savings'" [class.checking]="tone() === 'checking'">
+          <mat-icon>{{ getAccountIcon(account) }}</mat-icon>
+        </div>
+        <div>
+          <mat-card-title>Vue d'ensemble</mat-card-title>
+          <mat-card-subtitle>Statut: {{ getAccountStatusLabel(account) }}</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="summary-list">
+          <div>
+            <span>Type</span>
+            <strong>{{ getAccountTypeLabel(account) }}</strong>
+          </div>
+          <div>
+            <span>Client</span>
+            <strong>{{ account.clientId }}</strong>
+          </div>
+          <div>
+            <span>Compte</span>
+            <strong>#{{ account.id }}</strong>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="detail-card operation-card">
+      <mat-card-header>
+        <mat-card-title>Dépôt / Retrait</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="operation-type-selector" role="group" aria-label="Choix du type d'opération">
+          <button mat-stroked-button type="button" [class.selected]="operationType.value === 'DEPOSIT'"
+            (click)="operationType.setValue('DEPOSIT')">
+            Dépôt
+          </button>
+          <button mat-stroked-button type="button" [class.selected]="operationType.value === 'WITHDRAWAL'"
+            (click)="operationType.setValue('WITHDRAWAL')">
+            Retrait
+          </button>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Montant</mat-label>
+          <input matInput type="number" min="1" [formControl]="amount" />
+          @if (amount.invalid && amount.touched) {
+          <mat-error>Entrez un montant valide</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="operation-actions">
+          <button mat-flat-button color="primary" type="button" (click)="submitOperation()"
+            [disabled]="account.status !== 'ACTIVE'">
+            Valider l'opération
+          </button>
+        </div>
+
+        @if (account.status !== 'ACTIVE') {
+        <p class="warning">Ce compte est bloqué. Les opérations sont indisponibles.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="detail-card history-card">
+    <mat-card-header>
+      <mat-card-title>Historique des transactions</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="transaction-list">
+        @for (transaction of transactions(); track transaction.id) {
+        <article class="transaction-row">
+          <div class="transaction-icon" [class.deposit]="transaction.type === 'DEPOSIT'"
+            [class.withdrawal]="transaction.type === 'WITHDRAWAL'">
+            <mat-icon>{{ getTransactionIcon(transaction.type) }}</mat-icon>
+          </div>
+          <div class="transaction-meta">
+            <strong>{{ getTransactionTypeLabel(transaction.type) }}</strong>
+            <span>{{ transaction.date | date:'le dd/MM/yyyy à HH:mm' }}</span>
+          </div>
+          <strong class="transaction-amount">{{ transaction.amount }} €</strong>
+        </article>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>
+} @else {
+<section class="account-page empty-state">
+  <mat-card class="detail-card">
+    <mat-card-content>
+      <mat-icon>error_outline</mat-icon>
+      <h1>Compte introuvable</h1>
+      <p>Le compte demandé n'existe pas ou n'est plus accessible.</p>
+      <a mat-flat-button color="primary" routerLink="/accounts">Retour aux comptes</a>
+    </mat-card-content>
+  </mat-card>
+</section>
+}

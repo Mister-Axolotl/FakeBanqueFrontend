@@ -16,24 +16,6 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Prénom</mat-label>
-        <input matInput placeholder="John" [formControl]="firstName" (blur)="updateErrorMessage(firstName, 'prénom')"
-          required />
-        @if (firstName.invalid) {
-        <mat-error>{{getFirstNameErrorMessage()}}</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Nom</mat-label>
-        <input matInput placeholder="Doe" [formControl]="lastName" (blur)="updateErrorMessage(lastName, 'nom')"
-          required />
-        @if (lastName.invalid) {
-        <mat-error>{{getLastNameErrorMessage()}}</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
         <mat-label>Mot de passe</mat-label>
         <input matInput type="password" placeholder="Mot de passe" [formControl]="password"
           (blur)="updateErrorMessage(password, 'mot de passe')" required />
@@ -47,6 +29,9 @@
       <button mat-flat-button color="warn" (click)="onLogin()">
         Se connecter
       </button>
+      <a mat-stroked-button color="primary" class="register-link" [routerLink]="['/register']">
+        <span>S'inscrire</span>
+      </a>
     </div>
 
   </div>

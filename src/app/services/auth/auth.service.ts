@@ -6,6 +6,7 @@ import { Injectable, signal } from '@angular/core';
 export class AuthService {
   private readonly COOKIE_NAME = 'auth_token';
   readonly isLoggedIn = signal(false);
+  readonly jwtToken = 'eyJhbGciOiJIUhgthtzI1NiIsInR5chCIrazrat6IkpXVCJ9';
 
   constructor() {
     this.isLoggedIn.set(this.getCookie(this.COOKIE_NAME) !== null);
@@ -16,9 +17,12 @@ export class AuthService {
   }
 
   login() {
-    const jwtToken = 'eyJhbGciOiJIUhgthtzI1NiIsInR5chCIrazrat6IkpXVCJ9';
+    this.setCookie(this.COOKIE_NAME, this.jwtToken, 1);
+    this.isLoggedIn.set(true);
+  }
 
-    this.setCookie(this.COOKIE_NAME, jwtToken, 1);
+  register() {
+    this.setCookie(this.COOKIE_NAME, this.jwtToken, 1);
     this.isLoggedIn.set(true);
   }
 

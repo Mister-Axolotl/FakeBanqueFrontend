@@ -1,0 +1,243 @@
+@use '../../styles/variables' as *;
+
+.account-page {
+  height: 100%;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0;
+    font-size: 2.4rem;
+    color: $text-main;
+  }
+
+  .eyebrow,
+  .subtitle {
+    margin: 0.25rem 0 0;
+    color: $text-muted;
+  }
+}
+
+.back-link {
+  color: $color-primary;
+}
+
+.balance-pill {
+  min-width: 220px;
+  border-radius: 20px;
+  padding: 1rem 1.25rem;
+  color: $text-on-primary;
+  box-shadow: 0 12px 30px rgba(2, 12, 27, 0.12);
+
+  .label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.82;
+  }
+
+  .value {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  &.savings {
+    background-color: $color-success;
+  }
+
+  &.checking {
+    background-color: $color-info;
+  }
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-card {
+  border-radius: 24px;
+  border: 1px solid rgba(10, 25, 47, 0.08);
+  box-shadow: 0 10px 30px rgba(2, 12, 27, 0.06);
+
+  ::ng-deep .mat-mdc-card-header {
+    padding: 1.5rem 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  ::ng-deep .mat-mdc-card-content {
+    padding: 1.5rem;
+  }
+}
+
+.account-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: $text-on-primary;
+
+  &.savings {
+    background-color: $color-success;
+  }
+
+  &.checking {
+    background-color: $color-info;
+  }
+}
+
+.summary-list {
+  display: grid;
+  gap: 1rem;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    background-color: rgba(10, 25, 47, 0.03);
+
+    span {
+      color: $text-muted;
+    }
+  }
+}
+
+.operation-card {
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.operation-type-selector {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+
+  button.selected {
+    background-color: $color-primary;
+    color: $text-on-primary;
+    border-color: $color-primary;
+  }
+}
+
+.operation-actions {
+  display: flex;
+  justify-content: right;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.warning {
+  margin-top: 1rem;
+  color: $color-danger;
+  font-weight: 600;
+}
+
+.history-card {
+
+  .transaction-list {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .transaction-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 16px;
+    background-color: rgba(10, 25, 47, 0.03);
+  }
+
+  .transaction-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    color: $text-on-primary;
+
+    &.deposit {
+      background-color: $color-success;
+    }
+
+    &.withdrawal {
+      background-color: $color-danger;
+    }
+  }
+
+  .transaction-meta {
+    display: grid;
+    flex: 1;
+
+    span {
+      color: $text-muted;
+      font-size: 0.9rem;
+    }
+  }
+
+  .transaction-amount {
+    font-size: 1.05rem;
+  }
+}
+
+.empty-state {
+  display: grid;
+  place-items: center;
+
+  .detail-card {
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+  }
+
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    color: $color-danger;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .page-header,
+  .detail-grid {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .page-header {
+    align-items: stretch;
+  }
+
+  .balance-pill {
+    width: fit-content;
+  }
+}
+
+@media (max-width: 768px) {
+  .account-page {
+    padding: 1.25rem;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

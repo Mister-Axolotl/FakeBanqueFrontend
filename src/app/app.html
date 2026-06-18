@@ -1,5 +1,7 @@
 <app-header-component></app-header-component>
 
 <main class="content-area">
-  <router-outlet></router-outlet>
+  <section class="route-container" [@fadeRoute]="routeAnimation()">
+    <router-outlet></router-outlet>
+  </section>
 </main>

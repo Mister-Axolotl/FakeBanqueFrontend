@@ -1,16 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
-  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButton],
-  templateUrl: './login.html',
-  styleUrl: './login.scss',
+  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButton, RouterLink],
+  templateUrl: './login-component.html',
+  styleUrl: './login-component.scss',
 })
 export class LoginComponent {
   authService = inject(AuthService);
@@ -20,14 +21,7 @@ export class LoginComponent {
     nonNullable: true,
     validators: [Validators.required, Validators.email],
   });
-  readonly firstName = new FormControl<string>('', {
-    nonNullable: true,
-    validators: [Validators.required],
-  });
-  readonly lastName = new FormControl<string>('', {
-    nonNullable: true,
-    validators: [Validators.required],
-  });
+
   readonly password = new FormControl<string>('', {
     nonNullable: true,
     validators: [Validators.required],
@@ -49,28 +43,13 @@ export class LoginComponent {
     return this.updateErrorMessage(this.email, 'adresse email');
   }
 
-  getFirstNameErrorMessage(): string {
-    return this.updateErrorMessage(this.firstName, 'prénom');
-  }
-
-  getLastNameErrorMessage(): string {
-    return this.updateErrorMessage(this.lastName, 'nom');
-  }
-
   getPasswordErrorMessage(): string {
     return this.updateErrorMessage(this.password, 'mot de passe');
   }
 
   onLogin(): void {
-    if (
-      this.email.invalid ||
-      this.firstName.invalid ||
-      this.lastName.invalid ||
-      this.password.invalid
-    ) {
+    if (this.email.invalid || this.password.invalid) {
       this.email.markAsTouched();
-      this.firstName.markAsTouched();
-      this.lastName.markAsTouched();
       this.password.markAsTouched();
       return;
     } else if (this.email.hasError('email')) {
@@ -78,6 +57,6 @@ export class LoginComponent {
     }
 
     this.authService.login();
-    this.router.navigate(['/my-accounts']);
+    this.router.navigate(['/accounts']);
   }
 }

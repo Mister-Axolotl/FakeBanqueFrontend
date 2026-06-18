@@ -1,4 +1,10 @@
 .content-area {
   padding: 24px;
   height: calc(100vh - 108px);
+  box-sizing: border-box;
+  overflow-y: clip;
+}
+
+.route-container {
+  height: 100%;
 }

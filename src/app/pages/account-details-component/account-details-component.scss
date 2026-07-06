@@ -2,26 +2,47 @@
 
 .account-page {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-header {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   gap: 1.5rem;
-  align-items: flex-start;
-  margin-bottom: 2rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
 
-  h1 {
-    margin: 0;
-    font-size: 2.4rem;
-    color: $text-main;
-  }
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
 
-  .eyebrow,
-  .subtitle {
-    margin: 0.25rem 0 0;
-    color: $text-muted;
-  }
+.operation-btn {
+  border-radius: 20px;
+  padding: 0 1.5rem;
+  height: 48px;
+}
+
+.main-content-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1.5rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+  padding-right: 8px;
 }
 
 .back-link {
@@ -57,13 +78,6 @@
   &.checking {
     background-color: $color-info;
   }
-}
-
-.detail-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
 }
 
 .detail-card {
@@ -118,42 +132,30 @@
   }
 }
 
-.operation-card {
-  mat-form-field {
-    width: 100%;
-  }
-}
-
-.operation-type-selector {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-
-  button.selected {
-    background-color: $color-primary;
-    color: $text-on-primary;
-    border-color: $color-primary;
-  }
-}
-
-.operation-actions {
-  display: flex;
-  justify-content: right;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.warning {
-  margin-top: 1rem;
-  color: $color-danger;
-  font-weight: 600;
-}
-
 .history-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  ::ng-deep .mat-mdc-card-header {
+    flex-shrink: 0;
+  }
+
+  ::ng-deep .mat-mdc-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 1.5rem;
+  }
 
   .transaction-list {
     display: grid;
     gap: 0.85rem;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+    align-content: start;
   }
 
   .transaction-row {
@@ -216,28 +218,27 @@
 }
 
 @media (max-width: 900px) {
-
-  .page-header,
-  .detail-grid {
-    grid-template-columns: 1fr;
-    display: grid;
-  }
-
   .page-header {
+    flex-direction: column;
     align-items: stretch;
   }
 
-  .balance-pill {
-    width: fit-content;
+  .header-right {
+    justify-content: space-between;
+  }
+
+  .main-content-grid {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .history-card {
+    height: 500px;
   }
 }
 
 @media (max-width: 768px) {
   .account-page {
     padding: 1.25rem;
-  }
-
-  .detail-grid {
-    grid-template-columns: 1fr;
   }
 }

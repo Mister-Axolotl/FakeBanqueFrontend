@@ -1,0 +1,27 @@
+@use '../../styles/variables' as *;
+
+mat-dialog-content {
+    padding-top: 1rem !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.operation-type-selector {
+    display: flex;
+    gap: 0.75rem;
+
+    button {
+        flex: 1;
+    }
+
+    button.selected {
+        background-color: $color-primary;
+        color: $text-on-primary;
+        border-color: $color-primary;
+    }
+}
+
+mat-form-field {
+    width: 100%;
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -6,22 +6,19 @@ import { map } from 'rxjs';
 import { AccountService } from '../../services/account/account.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { signal } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { NewTransactionComponent } from '../new-transaction-component/new-transaction-component';
 
 @Component({
   selector: 'app-account-details-component',
+  standalone: true,
   imports: [
     RouterLink,
     MatButtonModule,
     MatCardModule,
-    MatFormFieldModule,
     MatIconModule,
-    MatInputModule,
-    ReactiveFormsModule,
+    MatDialogModule,
     DatePipe,
   ],
   templateUrl: './account-details-component.html',
@@ -31,6 +28,7 @@ import { signal } from '@angular/core';
 export class AccountDetailsComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly accountService = inject(AccountService);
+  private readonly dialog = inject(MatDialog);
 
   readonly accountId = toSignal(
     this.route.paramMap.pipe(map((paramMap) => Number(paramMap.get('id')))),
@@ -43,18 +41,11 @@ export class AccountDetailsComponent {
     this.refreshKey();
     return this.accountService.getAccountById(this.accountId());
   });
+
   readonly transactions = computed(() => {
     this.refreshKey();
     const account = this.account();
     return account ? this.accountService.getTransactions(account.id) : [];
-  });
-
-  readonly amount = new FormControl<number | null>(null, {
-    validators: [Validators.required, Validators.min(1)],
-  });
-
-  readonly operationType = new FormControl<'DEPOSIT' | 'WITHDRAWAL'>('DEPOSIT', {
-    nonNullable: true,
   });
 
   readonly typeLabel = computed(() => {
@@ -62,7 +53,6 @@ export class AccountDetailsComponent {
     if (!account) {
       return '';
     }
-
     return account.type === 'SAVINGS' ? 'Compte épargne' : 'Compte courant';
   });
 
@@ -91,22 +81,28 @@ export class AccountDetailsComponent {
     return type === 'DEPOSIT' ? 'south_west' : 'north_east';
   }
 
-  submitOperation(): void {
+  openOperationDialog(): void {
     const account = this.account();
 
-    if (!account || this.amount.invalid || this.operationType.invalid) {
-      this.amount.markAsTouched();
-      this.operationType.markAsTouched();
+    if (!account || account.status !== 'ACTIVE') {
       return;
     }
 
-    this.accountService.performOperation(
-      account.id,
-      { amount: this.amount.value ?? 0 },
-      this.operationType.value,
-    );
-    this.amount.reset();
-    this.operationType.setValue('DEPOSIT');
-    this.refreshKey.update((value) => value + 1);
+    const dialogRef = this.dialog.open(NewTransactionComponent, {
+      width: '400px',
+      autoFocus: 'first-tabbable'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.accountService.performOperation(
+          account.id,
+          { amount: result.amount },
+          result.type,
+        );
+
+        this.refreshKey.update((value) => value + 1);
+      }
+    });
   }
 }

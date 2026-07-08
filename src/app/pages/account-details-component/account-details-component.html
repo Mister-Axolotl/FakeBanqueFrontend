@@ -15,9 +15,10 @@
         Effectuer une opération
       </button>
 
-      <div class="balance-pill" [class.savings]="tone() === 'savings'" [class.checking]="tone() === 'checking'">
+      <div class="balance-pill" [class.savings]="account.type === 'SAVINGS'"
+        [class.checking]="account.type === 'CHECKING'">
         <span class="label">Solde actuel</span>
-        <span class="value">{{ account.balance }} €</span>
+        <span class="value">{{ account.balance | currency:'EUR':'symbol':'1.2-2':'fr-FR' }}</span>
       </div>
     </div>
   </header>
@@ -26,7 +27,8 @@
     <div class="side-panel">
       <mat-card class="detail-card summary-card">
         <mat-card-header>
-          <div class="account-icon" [class.savings]="tone() === 'savings'" [class.checking]="tone() === 'checking'">
+          <div class="account-icon" [class.savings]="account.type === 'SAVINGS'"
+            [class.checking]="account.type === 'CHECKING'">
             <mat-icon>{{ getAccountIcon(account) }}</mat-icon>
           </div>
           <div>
@@ -42,12 +44,12 @@
               <strong>{{ getAccountTypeLabel(account) }}</strong>
             </div>
             <div>
-              <span>Client</span>
-              <strong>{{ account.clientId }}</strong>
+              <span>Decouvert autorisé</span>
+              <strong>{{ account.overdraft | currency:'EUR':'symbol':'1.2-2':'fr-FR' }}</strong>
             </div>
             <div>
-              <span>Compte</span>
-              <strong>#{{ account.id }}</strong>
+              <span>Compte (IBAN)</span>
+              <strong>{{ account.id }}</strong>
             </div>
           </div>
         </mat-card-content>
@@ -69,10 +71,15 @@
             </div>
             <div class="transaction-meta">
               <strong>{{ getTransactionTypeLabel(transaction.type) }}</strong>
-              <span>{{ transaction.date | date:'le dd/MM/yyyy à HH:mm' }}</span>
+              <span>{{ transaction.timestamp | date:'dd/MM/yyyy à HH:mm' }}</span>
             </div>
-            <strong class="transaction-amount">{{ transaction.amount }} €</strong>
+            <strong class="transaction-amount">{{ transaction.amount | currency:'EUR':'symbol':'1.2-2':'fr-FR'
+              }}</strong>
           </article>
+          } @empty {
+          <div class="no-transactions">
+            <p>Aucune transaction récente pour ce compte.</p>
+          </div>
           }
         </div>
       </mat-card-content>
@@ -84,8 +91,8 @@
   <mat-card class="detail-card">
     <mat-card-content>
       <mat-icon>error_outline</mat-icon>
-      <h1>Compte introuvable</h1>
-      <p>Le compte demandé n'existe pas ou n'est plus accessible.</p>
+      <h1>Chargement ou Compte introuvable</h1>
+      <p>Veuillez patienter ou vérifier que le compte demandé existe.</p>
       <a mat-flat-button color="primary" routerLink="/accounts">Retour aux comptes</a>
     </mat-card-content>
   </mat-card>

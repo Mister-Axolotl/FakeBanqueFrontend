@@ -1,9 +1,10 @@
+@if (authService.me(); as user) {
 <div class="profile-container">
   <div class="profile-card">
 
     <div class="profile-header">
       <div class="profile-avatar">
-        {{ authService.me().firstName.charAt(0) }}{{ authService.me().lastName.charAt(0) }}
+        {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
       </div>
       <h1>Mon Profil</h1>
     </div>
@@ -11,17 +12,17 @@
     <div class="profile-content">
       <div class="info-group">
         <span class="label">Prénom</span>
-        <span class="value">{{ authService.me().firstName }}</span>
+        <span class="value">{{ user.firstName }}</span>
       </div>
 
       <div class="info-group">
         <span class="label">Nom</span>
-        <span class="value">{{ authService.me().lastName }}</span>
+        <span class="value">{{ user.lastName }}</span>
       </div>
 
       <div class="info-group">
-        <span class="label">Email</span>
-        <span class="value">{{ authService.me().email }}</span>
+        <span class="label">Adresse e-mail</span>
+        <span class="value">{{ user.email }}</span>
       </div>
     </div>
 
@@ -33,3 +34,8 @@
 
   </div>
 </div>
+} @else {
+<div class="profile-container">
+  <p>Chargement du profil en cours...</p>
+</div>
+}

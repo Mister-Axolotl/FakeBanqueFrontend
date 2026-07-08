@@ -1,83 +1,96 @@
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '../../../environments/environments';
+import { catchError, map, Observable, throwError } from 'rxjs';
 
-export interface AccountDTO {
-  id: number;
-  type: 'SAVINGS' | 'CHECKING';
+export interface AccountApi {
+  iban: string;
   clientId: string;
+  overdraft: number;
   balance: number;
-  status: 'ACTIVE' | 'BLOCKED' | 'CLOSED';
 }
 
-export interface TransactionDTO {
-  id: number;
-  accountId: number;
+export interface Account {
+  id: string;
+  iban: string;
+  clientId: string;
+  overdraft: number;
+  balance: number;
+  type: 'CHECKING' | 'SAVINGS';
+  status: 'ACTIVE' | 'BLOCKED';
+}
+
+export interface Transaction {
+  id: string;
   type: 'DEPOSIT' | 'WITHDRAWAL';
   amount: number;
-  date: string;
+  timestamp: string;
 }
 
-export interface OperationRequest {
-  amount: number;
-}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  private accounts: AccountDTO[] = [
-    { id: 1, type: 'SAVINGS', clientId: '123456', balance: 1500, status: 'ACTIVE' },
-    { id: 2, type: 'CHECKING', clientId: '123456', balance: 2500, status: 'BLOCKED' },
-  ];
+  private http = inject(HttpClient);
+  private readonly apiUrl = `${environment.apiUrl}/accounts`;
 
-  private transactions: TransactionDTO[] = [
-    { id: 1, accountId: 1, type: 'DEPOSIT', amount: 500, date: '2024-01-01T10:00:00Z' },
-    { id: 2, accountId: 1, type: 'WITHDRAWAL', amount: 200, date: '2024-01-05T15:30:00Z' },
-    { id: 3, accountId: 2, type: 'WITHDRAWAL', amount: 15, date: '2025-01-05T15:30:00Z' },
-  ];
-
-  getAccounts(): AccountDTO[] {
-    return this.accounts;
+  getAccounts(): Observable<Account[]> {
+    return this.http.get<AccountApi[]>(this.apiUrl).pipe(
+      map((apiAccounts) =>
+        apiAccounts.map((apiAcc) => this.mapApiToAccount(apiAcc))
+      ),
+      catchError(this.handleError)
+    );
   }
 
-  getAccountById(accountId: number): AccountDTO | undefined {
-    return this.getAccounts().find((account) => account.id === accountId);
+  getAccountById(id: string): Observable<Account> {
+    return this.http.get<AccountApi>(`${this.apiUrl}/${id}`).pipe(
+      map((apiAcc) => this.mapApiToAccount(apiAcc)),
+      catchError(this.handleError)
+    );
   }
 
-  getTransactions(accountId: number): TransactionDTO[] {
-    return this.transactions
-      .filter((transaction) => transaction.accountId === accountId)
-      .sort((firstTransaction, secondTransaction) => {
-        return (
-          new Date(secondTransaction.date).getTime() - new Date(firstTransaction.date).getTime()
-        );
-      });
+  getTransactions(accountId: string): Observable<Transaction[]> {
+    return this.http.get<Transaction[]>(`${this.apiUrl}/${accountId}/transactions`).pipe(
+      catchError(this.handleError)
+    );
   }
 
-  performOperation(
-    accountId: number,
-    operation: OperationRequest,
-    type: 'DEPOSIT' | 'WITHDRAWAL',
-  ): void {
-    const account = this.getAccountById(accountId);
-    if (!account) {
-      throw new Error('Account not found');
+  performOperation(accountId: string, payload: { amount: number }, type: 'DEPOSIT' | 'WITHDRAWAL'): Observable<void> {
+    const endpoint = type === 'DEPOSIT' ? 'deposit' : 'withdraw';
+    return this.http.post<void>(`${this.apiUrl}/${accountId}/${endpoint}`, payload).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private mapApiToAccount(apiAcc: AccountApi): Account {
+    return {
+      id: apiAcc.iban,
+      iban: apiAcc.iban,
+      clientId: apiAcc.clientId,
+      overdraft: apiAcc.overdraft,
+      balance: apiAcc.balance,
+      type: 'CHECKING',
+      status: 'ACTIVE'
+    };
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Une erreur est survenue.';
+    console.error('Erreur API Accounts:', error);
+
+    if (error.error && typeof error.error.error === 'string') {
+      errorMessage = error.error.error;
+    }
+    else if (error.status === 400) {
+      errorMessage = 'Montant invalide ou requête malformée.';
+    } else if (error.status === 401 || error.status === 403) {
+      errorMessage = 'Session expirée ou droits insuffisants.';
+    } else if (error.status === 404) {
+      errorMessage = 'Compte introuvable.';
     }
 
-    if (type === 'DEPOSIT') {
-      account.balance += operation.amount;
-    } else if (type === 'WITHDRAWAL') {
-      if (account.balance < operation.amount) {
-        throw new Error('Insufficient funds');
-      }
-      account.balance -= operation.amount;
-    }
-
-    this.transactions.push({
-      id: this.transactions.length + 1,
-      accountId,
-      type,
-      amount: operation.amount,
-      date: new Date().toISOString(),
-    });
+    return throwError(() => new Error(errorMessage));
   }
 }

@@ -121,6 +121,7 @@
   div {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 1rem;
     padding: 0.9rem 1rem;
     border-radius: 14px;
@@ -128,6 +129,12 @@
 
     span {
       color: $text-muted;
+      flex-shrink: 0;
+    }
+
+    strong {
+      word-break: break-all;
+      text-align: right;
     }
   }
 }

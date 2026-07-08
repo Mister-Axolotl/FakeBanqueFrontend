@@ -24,9 +24,9 @@ export class RegisterComponent {
   authService = inject(AuthService);
   router = inject(Router);
 
-  readonly email = new FormControl<string>('', {
+  readonly username = new FormControl<string>('', {
     nonNullable: true,
-    validators: [Validators.required, Validators.email],
+    validators: [Validators.required],
   });
   readonly firstName = new FormControl<string>('', {
     nonNullable: true,
@@ -46,15 +46,15 @@ export class RegisterComponent {
       return `Vous devez entrer un ${fieldLabel}`;
     }
 
-    if (control === this.email && control.hasError('email')) {
-      return "L'adresse email n'est pas valide";
+    if (control === this.username && control.hasError('username')) {
+      return "L'adresse username n'est pas valide";
     }
 
     return '';
   }
 
-  getEmailErrorMessage(): string {
-    return this.updateErrorMessage(this.email, 'adresse email');
+  getUsernameErrorMessage(): string {
+    return this.updateErrorMessage(this.username, 'adresse username');
   }
 
   getFirstNameErrorMessage(): string {
@@ -71,21 +71,29 @@ export class RegisterComponent {
 
   onRegister(): void {
     if (
-      this.email.invalid ||
+      this.username.invalid ||
       this.firstName.invalid ||
       this.lastName.invalid ||
       this.password.invalid
     ) {
-      this.email.markAsTouched();
+      this.username.markAsTouched();
       this.firstName.markAsTouched();
       this.lastName.markAsTouched();
       this.password.markAsTouched();
       return;
-    } else if (this.email.hasError('email')) {
+    } else if (this.username.hasError('username')) {
       return;
     }
 
-    this.authService.register();
-    this.router.navigate(['/accounts']);
+    this.authService.register({
+      username: this.username.value,
+      firstName: this.firstName.value,
+      lastName: this.lastName.value,
+      password: this.password.value
+    }).subscribe({
+      next: () => {
+        this.router.navigate(['/accounts']);
+      }
+    });
   }
 }

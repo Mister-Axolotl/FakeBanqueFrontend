@@ -19,7 +19,7 @@ export class LoginComponent {
 
   readonly email = new FormControl<string>('', {
     nonNullable: true,
-    validators: [Validators.required, Validators.email],
+    validators: [Validators.required],
   });
 
   readonly password = new FormControl<string>('', {
@@ -40,7 +40,7 @@ export class LoginComponent {
   }
 
   getEmailErrorMessage(): string {
-    return this.updateErrorMessage(this.email, 'adresse email');
+    return this.updateErrorMessage(this.email, "nom d'utilisateur");
   }
 
   getPasswordErrorMessage(): string {
@@ -56,7 +56,10 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.login();
-    this.router.navigate(['/accounts']);
+    this.authService.login({ email: this.email.value, password: this.password.value }).subscribe({
+      next: () => {
+        this.router.navigate(['/accounts']);
+      }
+    });
   }
 }

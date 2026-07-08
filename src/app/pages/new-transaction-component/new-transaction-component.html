@@ -3,18 +3,18 @@
 <mat-dialog-content>
     <div class="operation-type-selector" role="group" aria-label="Choix du type d'opération">
         <button mat-stroked-button type="button" [class.selected]="operationType.value === 'DEPOSIT'"
-            (click)="operationType.setValue('DEPOSIT')">
+            (click)="operationType.setValue('DEPOSIT')" [disabled]="isLoading()">
             Dépôt
         </button>
         <button mat-stroked-button type="button" [class.selected]="operationType.value === 'WITHDRAWAL'"
-            (click)="operationType.setValue('WITHDRAWAL')">
+            (click)="operationType.setValue('WITHDRAWAL')" [disabled]="isLoading()">
             Retrait
         </button>
     </div>
 
     <mat-form-field appearance="outline" style="width: 100%; margin-top: 1rem;">
         <mat-label>Montant</mat-label>
-        <input matInput type="number" min="1" [formControl]="amount" />
+        <input matInput type="number" min="1" [formControl]="amount" [readonly]="isLoading()" />
         @if (amount.invalid && amount.touched) {
         <mat-error>Entrez un montant valide</mat-error>
         }
@@ -22,8 +22,22 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Annuler</button>
-    <button mat-flat-button color="primary" (click)="submitOperation()" [disabled]="amount.invalid">
-        Valider
+    <button mat-button mat-dialog-close [disabled]="isLoading()">Annuler</button>
+
+    <button mat-flat-button color="primary" (click)="submitOperation()" [disabled]="amount.invalid || isLoading()">
+        {{ isLoading() ? 'En cours...' : 'Valider' }}
     </button>
 </mat-dialog-actions>
+
+
+<ng-template #errorDialog>
+    <h2 mat-dialog-title style="color: #d32f2f; display: flex; align-items: center; gap: 8px;">
+        Erreur
+    </h2>
+    <mat-dialog-content>
+        <p style="font-size: 1.1rem; margin-top: 10px;">{{ errorMessage() }}</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-flat-button color="warn" mat-dialog-close>Fermer</button>
+    </mat-dialog-actions>
+</ng-template>

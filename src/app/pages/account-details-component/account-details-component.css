@@ -111,6 +111,7 @@
 .summary-list div {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
   padding: 0.9rem 1rem;
   border-radius: 14px;
@@ -118,6 +119,11 @@
 }
 .summary-list div span {
   color: #64748b;
+  flex-shrink: 0;
+}
+.summary-list div strong {
+  word-break: break-all;
+  text-align: right;
 }
 
 .history-card {

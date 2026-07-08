@@ -11,7 +11,29 @@ $text-secondary: $text-muted;
   margin: 0 auto;
 
   .dashboard-header {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 2.5rem;
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .header-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 1rem;
+
+      .create-btn {
+        border-radius: 20px;
+        padding: 0 2rem;
+        height: 48px;
+        font-weight: 600;
+      }
+    }
 
     .welcome-title {
       font-size: 2.2rem;
@@ -182,6 +204,12 @@ $text-secondary: $text-muted;
           color: $text-primary;
           letter-spacing: -0.03em;
           text-align: right;
+          line-height: 1.2;
+          padding-bottom: 0.1rem;
+          display: block;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
         }
       }
 
@@ -218,6 +246,65 @@ $text-secondary: $text-muted;
           box-shadow: 0 14px 24px rgba(10, 25, 47, 0.24);
         }
       }
+    }
+  }
+}
+
+.no-accounts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1rem;
+
+  .empty-state-card {
+    background-color: $color-bg-surface;
+    border-radius: 24px;
+    border: 1px dashed rgba(10, 25, 47, 0.15);
+    padding: 3rem 2rem;
+    max-width: 480px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(2, 12, 27, 0.03);
+
+    .icon-container {
+      width: 80px;
+      height: 80px;
+      background-color: rgba($color-primary, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+
+      mat-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        color: $color-primary;
+      }
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin: 0 0 0.75rem 0;
+    }
+
+    p {
+      color: $text-secondary;
+      line-height: 1.6;
+      margin: 0 0 2rem 0;
+      font-size: 1rem;
+    }
+
+    .create-btn {
+      border-radius: 20px;
+      padding: 0 2rem;
+      height: 48px;
+      font-weight: 600;
     }
   }
 }

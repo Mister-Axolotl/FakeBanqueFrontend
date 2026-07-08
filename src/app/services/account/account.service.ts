@@ -64,6 +64,12 @@ export class AccountService {
     );
   }
 
+  createAccount(payload: { iban: string; balance: number; overdraft: number }): Observable<void> {
+    return this.http.post<void>(this.apiUrl, payload).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private mapApiToAccount(apiAcc: AccountApi): Account {
     return {
       id: apiAcc.iban,

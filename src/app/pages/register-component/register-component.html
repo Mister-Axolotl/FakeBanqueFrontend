@@ -7,11 +7,11 @@
 
     <div class="register-content">
       <mat-form-field appearance="outline">
-        <mat-label>Nom d'utilisateur</mat-label>
-        <input matInput placeholder="john.doe" [formControl]="username"
-          (blur)="updateErrorMessage(username, 'username')" required />
-        @if (username.invalid) {
-        <mat-error>{{getUsernameErrorMessage()}}</mat-error>
+        <mat-label>Adresse email</mat-label>
+        <input matInput placeholder="john.doe@example.com" [formControl]="email"
+          (blur)="updateErrorMessage(email, 'adresse email')" required />
+        @if (email.invalid) {
+        <mat-error>{{getEmailErrorMessage()}}</mat-error>
         }
       </mat-form-field>
 

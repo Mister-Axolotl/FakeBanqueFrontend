@@ -24,9 +24,9 @@ export class RegisterComponent {
   authService = inject(AuthService);
   router = inject(Router);
 
-  readonly username = new FormControl<string>('', {
+  readonly email = new FormControl<string>('', {
     nonNullable: true,
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.email],
   });
   readonly firstName = new FormControl<string>('', {
     nonNullable: true,
@@ -46,15 +46,15 @@ export class RegisterComponent {
       return `Vous devez entrer un ${fieldLabel}`;
     }
 
-    if (control === this.username && control.hasError('username')) {
-      return "L'adresse username n'est pas valide";
+    if (control === this.email && control.hasError('email')) {
+      return "L'adresse email n'est pas valide";
     }
 
     return '';
   }
 
-  getUsernameErrorMessage(): string {
-    return this.updateErrorMessage(this.username, 'adresse username');
+  getEmailErrorMessage(): string {
+    return this.updateErrorMessage(this.email, 'adresse email');
   }
 
   getFirstNameErrorMessage(): string {
@@ -71,22 +71,22 @@ export class RegisterComponent {
 
   onRegister(): void {
     if (
-      this.username.invalid ||
+      this.email.invalid ||
       this.firstName.invalid ||
       this.lastName.invalid ||
       this.password.invalid
     ) {
-      this.username.markAsTouched();
+      this.email.markAsTouched();
       this.firstName.markAsTouched();
       this.lastName.markAsTouched();
       this.password.markAsTouched();
       return;
-    } else if (this.username.hasError('username')) {
+    } else if (this.email.hasError('email')) {
       return;
     }
 
     this.authService.register({
-      username: this.username.value,
+      email: this.email.value,
       firstName: this.firstName.value,
       lastName: this.lastName.value,
       password: this.password.value

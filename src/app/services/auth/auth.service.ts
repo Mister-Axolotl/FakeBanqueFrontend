@@ -8,6 +8,13 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 export interface AuthResponse {
   access_token: string;
 }
@@ -59,8 +66,8 @@ export class AuthService {
     );
   }
 
-  register(userData: any): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/clients`, userData).pipe(
+  register(userData: RegisterRequest): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/auth/register`, userData).pipe(
       catchError(this.handleError)
     );
   }

@@ -15,4 +15,9 @@ pour installer les dépendances puis
 npm start
 ```
 
-Pour lancer le projet
+pour lancer le projet.
+
+## Identifiants
+
+email : mail@mail.fr
+mdp : password123
